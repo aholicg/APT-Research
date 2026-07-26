@@ -1,0 +1,158 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NoteCard from "../components/NoteCard.astro";
+import Icon from "../components/Icon.astro";
+
+const notes = (await getCollection("notes", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+const tags = [...new Set(notes.flatMap((note) => note.data.tags))].sort();
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout>
+  <section class="home-hero" id="top">
+    <div
+      class="home-hero__image"
+      style={`background-image: url('${base}/assets/cyber-city.jpg')`}
+      data-parallax="-0.045"
+    ></div>
+    <div class="home-hero__veil"></div>
+    <div class="hero-orbit" aria-hidden="true" data-parallax="0.025">
+      <span></span><span></span><span></span><i></i>
+    </div>
+    <div class="hero-readout hero-readout--left" aria-hidden="true">
+      <span>40.7128 N</span><span>74.0060 W</span><span>FIELD LOG</span>
+    </div>
+
+    <div class="home-hero__content">
+      <p class="scene-label reveal">
+        <span>Entry 00</span><i></i><span>Index</span>
+      </p>
+      <div class="home-hero__heading reveal" data-tilt>
+        <p>Security / systems / people</p>
+        <h1>Notes on things<br />beneath the <em>surface.</em></h1>
+      </div>
+      <div class="home-hero__bottom reveal">
+        <p>
+          Research fragments, technical field notes, and observations about the
+          hidden assumptions inside software.
+        </p>
+        <a class="primary-action magnetic" href="#notes">
+          <Icon name="note" size={17} />
+          <span>Browse notes</span>
+          <Icon name="arrow" size={19} />
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <span>Scroll</span><i></i>
+    </div>
+  </section>
+
+  <section class="notes-section" id="notes">
+    <div class="section-shell">
+      <header class="section-heading reveal">
+        <div>
+          <p class="scene-label">
+            <span>Entry 01</span><i></i><span>Archive</span>
+          </p>
+          <h2>All notes<span>.</span></h2>
+        </div>
+        <p>{notes.length.toString().padStart(2, "0")} entries / newest first</p>
+      </header>
+
+      <div class="filter-bar reveal" role="group" aria-label="Filter notes by topic">
+        <span class="filter-bar__icon"><Icon name="filter" size={16} /></span>
+        <button class="filter-chip is-active" type="button" data-filter="all">
+          All
+        </button>
+        {tags.map((tag) => <button class="filter-chip" type="button" data-filter={tag}>{tag}</button>)}
+        <span class="filter-bar__count" data-filter-count>{notes.length} shown</span>
+      </div>
+
+      <div class="notes-grid" data-notes-grid>
+        {notes.map((note, index) => <NoteCard note={note} index={index} featured={index === 0} />)}
+      </div>
+
+      <p class="filter-empty" data-filter-empty hidden>
+        No notes match this signal.
+      </p>
+    </div>
+  </section>
+
+  <section class="about-section" id="about">
+    <div class="about-grid">
+      <div class="about-portrait reveal" data-tilt aria-hidden="true">
+        <div class="about-portrait__grid"></div>
+        <div class="about-portrait__figure">
+          <svg viewBox="0 0 360 430">
+            <path
+              d="M180 25c-52 0-88 43-88 98 0 35 14 61 32 79-7 32-14 56-37 69-34 19-55 55-59 126h304c-4-71-25-107-59-126-23-13-30-37-37-69 18-18 32-44 32-79 0-55-36-98-88-98Z"
+            />
+            <path class="figure-line" d="M92 122h66l16 13 33-25h61M123 202l51 27 62-27" />
+            <circle cx="180" cy="135" r="4" />
+          </svg>
+        </div>
+        <span class="about-portrait__scan"></span>
+        <div class="about-portrait__corners"><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="about-copy">
+        <p class="scene-label reveal">
+          <span>Entry 02</span><i></i><span>About</span>
+        </p>
+        <h2 class="reveal">Hi, I'm Trang<span>.</span></h2>
+        <p class="about-copy__lead reveal">
+          I study how software behaves when assumptions fail.
+        </p>
+        <p class="reveal">
+          My work lives between offensive security, low-level systems, and making
+          difficult ideas easier to see. This blog is a living archive of
+          experiments, wrong turns, and observations worth keeping.
+        </p>
+        <div class="about-signals reveal">
+          <span><Icon name="tag" size={14} /> Security research</span>
+          <span><Icon name="tag" size={14} /> Reverse engineering</span>
+          <span><Icon name="tag" size={14} /> Human systems</span>
+        </div>
+        <a
+          class="secondary-action magnetic"
+          href="https://github.com/aholicg"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Icon name="github" size={18} />
+          <span>Find me on GitHub</span>
+          <Icon name="external" size={16} />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const filterButtons = [...document.querySelectorAll<HTMLButtonElement>("[data-filter]")];
+    const cards = [...document.querySelectorAll<HTMLElement>("[data-note-card]")];
+    const count = document.querySelector<HTMLElement>("[data-filter-count]");
+    const empty = document.querySelector<HTMLElement>("[data-filter-empty]");
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const filter = button.dataset.filter ?? "all";
+        let visible = 0;
+
+        filterButtons.forEach((item) => item.classList.toggle("is-active", item === button));
+        cards.forEach((card) => {
+          const matches = filter === "all" || card.dataset.tags?.split(" ").includes(filter);
+          card.hidden = !matches;
+          if (matches) visible += 1;
+        });
+
+        if (count) count.textContent = `${visible} shown`;
+        if (empty) empty.hidden = visible !== 0;
+      });
+    });
+  </script>
+</BaseLayout>

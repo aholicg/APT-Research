@@ -1,0 +1,113 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import NoteCard from "../../components/NoteCard.astro";
+import Icon from "../../components/Icon.astro";
+
+export async function getStaticPaths() {
+  const notes = await getCollection("notes", ({ data }) => !data.draft);
+  return notes.map((note) => ({
+    params: { slug: note.id },
+    props: { note, allNotes: notes },
+  }));
+}
+
+interface Props {
+  note: CollectionEntry<"notes">;
+  allNotes: CollectionEntry<"notes">[];
+}
+
+const { note, allNotes } = Astro.props;
+const { Content, headings } = await render(note);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const date = note.data.pubDate.toLocaleDateString("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC",
+});
+const related = allNotes
+  .filter(
+    (candidate) =>
+      candidate.id !== note.id &&
+      candidate.data.tags.some((tag) => note.data.tags.includes(tag)),
+  )
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 2);
+---
+
+<BaseLayout title={note.data.title} description={note.data.description} article>
+  <article class="article-page" id="top">
+    <header class="article-hero">
+      <div class="article-hero__grid" aria-hidden="true"></div>
+      <div class="article-hero__orbit" aria-hidden="true">
+        <span></span><span></span><i></i>
+      </div>
+      <div class="article-shell">
+        <a class="article-back magnetic" href={`${base}/#notes`}>
+          <span aria-hidden="true">←</span>
+          <span>All notes</span>
+        </a>
+        <p class="scene-label reveal">
+          <span>Field note</span><i></i><span>{note.id}</span>
+        </p>
+        <h1 class="reveal">{note.data.title}</h1>
+        <p class="article-dek reveal">{note.data.description}</p>
+        <div class="article-meta reveal">
+          <span><Icon name="calendar" size={15} /> {date}</span>
+          <span><Icon name="clock" size={15} /> {note.data.readingTime}</span>
+          <span><Icon name="tag" size={15} /> {note.data.tags.join(" / ")}</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="article-layout">
+      <aside class="article-aside">
+        <div>
+          <p>On this page</p>
+          <nav aria-label="Table of contents">
+            {headings.filter((heading) => heading.depth === 2).map((heading) => (
+              <a href={`#${heading.slug}`}>{heading.text}</a>
+            ))}
+          </nav>
+          <button class="copy-link magnetic" type="button" data-copy-link>
+            <Icon name="copy" size={15} />
+            <span>Copy link</span>
+          </button>
+        </div>
+      </aside>
+
+      <div class="article-body prose reveal">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="related-section">
+        <div class="section-shell">
+          <header class="related-heading">
+            <p class="scene-label"><span>Continue</span><i /><span>Related notes</span></p>
+            <h2>Read next<span>.</span></h2>
+          </header>
+          <div class="related-grid">
+            {related.map((item, index) => <NoteCard note={item} index={index} />)}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <script>
+    const copyButton = document.querySelector<HTMLButtonElement>("[data-copy-link]");
+    copyButton?.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(window.location.href);
+      const label = copyButton.querySelector("span");
+      if (label) label.textContent = "Copied";
+      window.setTimeout(() => {
+        if (label) label.textContent = "Copy link";
+      }, 1600);
+    });
+  </script>
+</BaseLayout>

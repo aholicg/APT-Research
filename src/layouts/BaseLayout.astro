@@ -1,0 +1,126 @@
+---
+import "../styles/global.css";
+import Icon from "../components/Icon.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  article?: boolean;
+}
+
+const {
+  title = "Trang's Notes",
+  description = "Notes on security, systems, design, and the spaces in between.",
+  article = false,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const fullTitle = title === "Trang's Notes" ? title : `${title} — Trang's Notes`;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.url;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#06100d" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={article ? "article" : "website"} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={`${base}/assets/favicon.svg`} type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <title>{fullTitle}</title>
+  </head>
+  <body>
+    <div class="loader" data-loader aria-label="Loading page">
+      <div class="loader__paper" aria-hidden="true">
+        <Icon name="note" size={42} strokeWidth={1.2} />
+        <span></span>
+      </div>
+      <p>Opening notes</p>
+      <div class="loader__track"><span data-loader-progress></span></div>
+      <small data-loader-percent>00</small>
+    </div>
+
+    <div class="cursor-dot" aria-hidden="true"></div>
+    <div class="cursor-ring" aria-hidden="true"></div>
+    <div class="pointer-light" aria-hidden="true"></div>
+    <div class="click-layer" aria-hidden="true"></div>
+    <div class="page-grain" aria-hidden="true"></div>
+    <div class="page-scan" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <a class="site-title magnetic" href={`${base}/`}>
+        <Icon name="note" size={22} />
+        <span>Trang's notes</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <a class="icon-link magnetic" href={`${base}/`} aria-label="Home" data-tooltip="Home">
+          <Icon name="home" />
+        </a>
+        <a
+          class="icon-link magnetic"
+          href={`${base}/#notes`}
+          aria-label="All notes"
+          data-tooltip="Notes"
+        >
+          <Icon name="note" />
+        </a>
+        <a
+          class="icon-link magnetic"
+          href={`${base}/#about`}
+          aria-label="About Trang"
+          data-tooltip="About"
+        >
+          <Icon name="user" />
+        </a>
+        <span class="nav-divider"></span>
+        <a
+          class="icon-link magnetic"
+          href="https://github.com/aholicg"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="GitHub profile"
+          data-tooltip="GitHub"
+        >
+          <Icon name="github" />
+        </a>
+      </nav>
+    </header>
+
+    <div class="reading-progress" aria-hidden="true">
+      <span data-reading-progress></span>
+    </div>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <Icon name="note" size={16} />
+        <span>Trang's notes</span>
+      </div>
+      <p>Built from Markdown with Astro.</p>
+      <a href="#top">Back to top ↑</a>
+    </footer>
+
+    <div class="coordinates" aria-hidden="true">
+      <span data-coordinate-x>X 000</span>
+      <span data-coordinate-y>Y 000</span>
+    </div>
+
+    <script>
+      import "../scripts/site.ts";
+    </script>
+  </body>
+</html>

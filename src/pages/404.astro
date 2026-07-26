@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+
+<BaseLayout title="Page not found">
+  <section class="not-found" id="top">
+    <div class="not-found__frame">
+      <p class="scene-label"><span>Error</span><i></i><span>Signal missing</span></p>
+      <strong>404</strong>
+      <h1>This note doesn't exist.</h1>
+      <p>The page may have moved, changed its name, or never made it into the archive.</p>
+      <a class="primary-action magnetic" href={`${base}/`}>
+        <Icon name="home" size={17} /><span>Return home</span><Icon name="arrow" size={18} />
+      </a>
+    </div>
+  </section>
+</BaseLayout>

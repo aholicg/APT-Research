@@ -1,0 +1,64 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Icon from "./Icon.astro";
+
+interface Props {
+  note: CollectionEntry<"notes">;
+  index: number;
+  featured?: boolean;
+}
+
+const { note, index, featured = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const href = `${base}/notes/${note.id}/`;
+const date = note.data.pubDate.toLocaleDateString("en-US", {
+  month: "short",
+  day: "2-digit",
+  year: "numeric",
+  timeZone: "UTC",
+});
+---
+
+<article
+  class:list={["note-card", { "note-card--featured": featured }, "reveal"]}
+  data-note-card
+  data-tags={note.data.tags.join(" ").toLowerCase()}
+  data-tilt
+>
+  <a href={href} aria-label={`Read ${note.data.title}`}>
+    <span class="note-card__index" aria-hidden="true">
+      {String(index + 1).padStart(2, "0")}
+    </span>
+
+    {
+      featured && (
+        <span class="note-card__visual" aria-hidden="true">
+          <span class="radar radar--outer" />
+          <span class="radar radar--inner" />
+          <span class="radar__axis radar__axis--x" />
+          <span class="radar__axis radar__axis--y" />
+          <span class="radar__point radar__point--one" />
+          <span class="radar__point radar__point--two" />
+          <span class="radar__point radar__point--three" />
+          <span class="radar__sweep" />
+        </span>
+      )
+    }
+
+    <span class="note-card__content">
+      <span class="note-card__meta">
+        <span><Icon name="calendar" size={13} /> {date}</span>
+        <span><Icon name="clock" size={13} /> {note.data.readingTime}</span>
+      </span>
+      <strong>{note.data.title}</strong>
+      <span class="note-card__description">{note.data.description}</span>
+      <span class="note-card__tags">
+        {note.data.tags.map((tag) => <span>#{tag}</span>)}
+      </span>
+      <span class="note-card__open">
+        <span>Read note</span>
+        <Icon name="arrow" size={19} />
+      </span>
+    </span>
+  </a>
+</article>
