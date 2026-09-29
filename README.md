@@ -1,57 +1,26 @@
-# Trang's Notes
+# APT-Research
 
-An interactive personal blog built with Astro. Notes are Markdown files and are
-automatically listed on the homepage and rendered as standalone HTML pages.
+Research notes and exercises on offensive security topics.
 
-## Add a note
+## Contents
 
-Create a file in `src/content/notes/`:
+- **Notes** (`src/content/notes/`) — Short articles on security concepts: persistence, memory, attack surfaces, and human factors.
+- **APT persistence research** (`custom code/`) — Windows persistence techniques implemented in C: Image Hijack, Registry Run Key, Scheduled Task, and Startup Folder.
+- **Remote Template Injection** (`Remote Template Injection/`) — Research on RTI vulnerabilities, including a proof-of-concept exploit and analysis documents.
+- **Internship reports** (`report/`) — Exercise reports and CVE analyses from security training.
 
-```md
----
-title: A useful title
-description: A one-line summary.
-pubDate: 2026-07-26
-tags:
-  - security
-  - systems
-readingTime: 5 min
-featured: false
-draft: false
----
+## Website
 
-Write the note in Markdown here.
-```
-
-No page component needs to be created. Astro's `notes` content collection
-validates the frontmatter, adds the note to the filterable index, and generates
-its `/notes/<filename>/` page during the build.
-
-## Run locally
+The repository includes an Astro-based static site that renders the notes as readable pages. The site is a straightforward UI for browsing the notes content.
 
 ```bash
 npm install
 npm run dev
 ```
 
-The configured project path is `http://localhost:4321/APT-Research/`.
-
-## Build
-
-```bash
-npm run build
-```
-
-The static site is generated in `dist/`. Pushing `main` runs the included
-GitHub Pages workflow.
-
-## Research archive
-
-The repository also preserves the original APT persistence research source code
-and internship exercise reports.
+The site is served at `http://localhost:4321/APT-Research/`.
 
 ## Credits
 
-- Hero image by [Nat on Unsplash](https://unsplash.com/photos/a-futuristic-city-at-night-with-neon-lights-dA0-qxdbyyY),
-  used under the Unsplash License.
+- Hero image by [Nat on Unsplash](https://unsplash.com/photos/a-futuristic-city-at-night-with-neon-lights-dA0-qxdbyyY), used under the Unsplash License.
 - Interface icons are based on [Lucide](https://lucide.dev/), used under the ISC License.

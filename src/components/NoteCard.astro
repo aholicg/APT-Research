@@ -20,30 +20,14 @@ const date = note.data.pubDate.toLocaleDateString("en-US", {
 ---
 
 <article
-  class:list={["note-card", { "note-card--featured": featured }, "reveal"]}
+  class:list={["note-card", { "note-card--featured": featured }]}
   data-note-card
   data-tags={note.data.tags.join(" ").toLowerCase()}
-  data-tilt
 >
   <a href={href} aria-label={`Read ${note.data.title}`}>
     <span class="note-card__index" aria-hidden="true">
       {String(index + 1).padStart(2, "0")}
     </span>
-
-    {
-      featured && (
-        <span class="note-card__visual" aria-hidden="true">
-          <span class="radar radar--outer" />
-          <span class="radar radar--inner" />
-          <span class="radar__axis radar__axis--x" />
-          <span class="radar__axis radar__axis--y" />
-          <span class="radar__point radar__point--one" />
-          <span class="radar__point radar__point--two" />
-          <span class="radar__point radar__point--three" />
-          <span class="radar__sweep" />
-        </span>
-      )
-    }
 
     <span class="note-card__content">
       <span class="note-card__meta">

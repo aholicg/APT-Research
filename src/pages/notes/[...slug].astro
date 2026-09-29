@@ -38,48 +38,34 @@ const related = allNotes
 
 <BaseLayout title={note.data.title} description={note.data.description} article>
   <article class="article-page" id="top">
-    <header class="article-hero">
-      <div class="article-hero__grid" aria-hidden="true"></div>
-      <div class="article-hero__orbit" aria-hidden="true">
-        <span></span><span></span><i></i>
-      </div>
-      <div class="article-shell">
-        <a class="article-back magnetic" href={`${base}/#notes`}>
-          <span aria-hidden="true">←</span>
-          <span>All notes</span>
-        </a>
-        <p class="scene-label reveal">
-          <span>Field note</span><i></i><span>{note.id}</span>
-        </p>
-        <h1 class="reveal">{note.data.title}</h1>
-        <p class="article-dek reveal">{note.data.description}</p>
-        <div class="article-meta reveal">
-          <span><Icon name="calendar" size={15} /> {date}</span>
-          <span><Icon name="clock" size={15} /> {note.data.readingTime}</span>
-          <span><Icon name="tag" size={15} /> {note.data.tags.join(" / ")}</span>
-        </div>
-      </div>
-    </header>
+    <a class="article-back" href={`${base}/#notes`}>
+      <span aria-hidden="true">&larr;</span>
+      <span>All notes</span>
+    </a>
 
-    <div class="article-layout">
-      <aside class="article-aside">
-        <div>
-          <p>On this page</p>
-          <nav aria-label="Table of contents">
-            {headings.filter((heading) => heading.depth === 2).map((heading) => (
-              <a href={`#${heading.slug}`}>{heading.text}</a>
-            ))}
-          </nav>
-          <button class="copy-link magnetic" type="button" data-copy-link>
-            <Icon name="copy" size={15} />
-            <span>Copy link</span>
-          </button>
-        </div>
-      </aside>
+    <h1>{note.data.title}</h1>
+    <p class="article-dek">{note.data.description}</p>
+    <div class="article-meta">
+      <span><Icon name="calendar" size={14} /> {date}</span>
+      <span><Icon name="clock" size={14} /> {note.data.readingTime}</span>
+      <span><Icon name="tag" size={14} /> {note.data.tags.join(" / ")}</span>
+    </div>
 
-      <div class="article-body prose reveal">
-        <Content />
-      </div>
+    <aside class="article-aside">
+      <p>On this page</p>
+      <nav aria-label="Table of contents">
+        {headings.filter((heading) => heading.depth === 2).map((heading) => (
+          <a href={`#${heading.slug}`}>{heading.text}</a>
+        ))}
+      </nav>
+      <button class="copy-link" type="button" data-copy-link>
+        <Icon name="copy" size={14} />
+        <span>Copy link</span>
+      </button>
+    </aside>
+
+    <div class="article-body prose">
+      <Content />
     </div>
   </article>
 
@@ -88,8 +74,7 @@ const related = allNotes
       <section class="related-section">
         <div class="section-shell">
           <header class="related-heading">
-            <p class="scene-label"><span>Continue</span><i /><span>Related notes</span></p>
-            <h2>Read next<span>.</span></h2>
+            <h2>Read next</h2>
           </header>
           <div class="related-grid">
             {related.map((item, index) => <NoteCard note={item} index={index} />)}

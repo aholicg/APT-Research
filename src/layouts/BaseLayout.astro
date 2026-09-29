@@ -40,66 +40,31 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.u
     <title>{fullTitle}</title>
   </head>
   <body>
-    <div class="loader" data-loader aria-label="Loading page">
-      <div class="loader__paper" aria-hidden="true">
-        <Icon name="note" size={42} strokeWidth={1.2} />
-        <span></span>
-      </div>
-      <p>Opening notes</p>
-      <div class="loader__track"><span data-loader-progress></span></div>
-      <small data-loader-percent>00</small>
-    </div>
-
-    <div class="cursor-dot" aria-hidden="true"></div>
-    <div class="cursor-ring" aria-hidden="true"></div>
-    <div class="pointer-light" aria-hidden="true"></div>
-    <div class="click-layer" aria-hidden="true"></div>
-    <div class="page-grain" aria-hidden="true"></div>
-    <div class="page-scan" aria-hidden="true"></div>
-
     <header class="site-header">
-      <a class="site-title magnetic" href={`${base}/`}>
+      <a class="site-title" href={`${base}/`}>
         <Icon name="note" size={22} />
         <span>Trang's notes</span>
       </a>
 
       <nav aria-label="Primary navigation">
-        <a class="icon-link magnetic" href={`${base}/`} aria-label="Home" data-tooltip="Home">
+        <a class="icon-link" href={`${base}/`} aria-label="Home">
           <Icon name="home" />
         </a>
-        <a
-          class="icon-link magnetic"
-          href={`${base}/#notes`}
-          aria-label="All notes"
-          data-tooltip="Notes"
-        >
+        <a class="icon-link" href={`${base}/#notes`} aria-label="All notes">
           <Icon name="note" />
-        </a>
-        <a
-          class="icon-link magnetic"
-          href={`${base}/#about`}
-          aria-label="About Trang"
-          data-tooltip="About"
-        >
-          <Icon name="user" />
         </a>
         <span class="nav-divider"></span>
         <a
-          class="icon-link magnetic"
+          class="icon-link"
           href="https://github.com/aholicg"
           target="_blank"
           rel="noreferrer"
           aria-label="GitHub profile"
-          data-tooltip="GitHub"
         >
           <Icon name="github" />
         </a>
       </nav>
     </header>
-
-    <div class="reading-progress" aria-hidden="true">
-      <span data-reading-progress></span>
-    </div>
 
     <main>
       <slot />
@@ -110,17 +75,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.u
         <Icon name="note" size={16} />
         <span>Trang's notes</span>
       </div>
-      <p>Systems, security, and the human layer.</p>
       <a href="#top">Back to top ↑</a>
     </footer>
-
-    <div class="coordinates" aria-hidden="true">
-      <span data-coordinate-x>X 000</span>
-      <span data-coordinate-y>Y 000</span>
-    </div>
-
-    <script>
-      import "../scripts/site.ts";
-    </script>
   </body>
 </html>
