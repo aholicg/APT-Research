@@ -1,4 +1,4 @@
-# APT-Research
+# APT Research
 
 Research notes and exercises on offensive security topics.
 
